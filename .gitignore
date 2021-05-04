@@ -1,0 +1,7 @@
+env
+__pycache__/
+.flaskenv
+vocab.db
+migrations/
+db_file.py
+.DS_Store
