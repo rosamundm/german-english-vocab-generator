@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
 
 def create_app():
@@ -12,6 +13,18 @@ def create_app():
     with app.app_context():
         from .main import routes
         app.register_blueprint(routes.main_blueprint)
+        app.register_blueprint(routes.auth_blueprint)
+  
+        login_manager = LoginManager()
+        login_manager.login_view = "auth_blueprint.login"
+        login_manager.init_app(app)
+
+        from de_en_vocab.main.models import User
+
+        @login_manager.user_loader
+        def load_user(user_id):
+            return User.query.get(int(user_id))
+
         return app
 
 

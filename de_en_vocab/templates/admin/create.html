@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+<a href="{{ url_for('main_blueprint.index') }}" class="navbar-item">
+    Home
+</a>
+{% if current_user.is_authenticated %}
+<a href="{{ url_for('auth_blueprint.logout') }}" class="navbar-item">
+    Logout
+</a>
+{% endif %}
+
+<h1>Add your vocab here</h1>
+
+
+{% endblock %}

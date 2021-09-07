@@ -9,6 +9,9 @@
 
 <body>
   <div class="container">
+
+    {% block content %}
+
     <div class="vocab-box">
       <p>🇩🇪 {{ random_german_word }}</p>
       <p>🇬🇧 {{ english_translation }}</p>
@@ -23,6 +26,8 @@
    <br>
    © <a href="https://github.com/rosamundm">Rosamund Mather</a> <script type="text/javascript">document.write(new Date().getFullYear());</script> | <a href="/api/v1/index">API</a>
  </div>
+ {% endblock %}
+
 
 </body>
 </html>

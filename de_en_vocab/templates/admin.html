@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<a href="{{ url_for('auth_blueprint.logout') }}" class="navbar-item">
+    Logout
+</a>
+{% endif %}
+
+    <h1>Admin</h1>
+
+        <p>Add your vocab here</p>
+
+{% endblock %}
