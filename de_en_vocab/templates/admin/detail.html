@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<a href="{{ url_for('main_blueprint.index') }}" class="navbar-item">
+    Home
+</a>
+<br>
+{% if current_user.is_authenticated %}
+<a href="{{ url_for('auth_blueprint.logout') }}" class="navbar-item">
+    Logout
+</a>
+{% endif %}
+
+    <h1>Detail</h1>
+
+
+   <div class="main-content">
+
+
+        <strong>{{ vocab_item.de_word }}</strong> 
+        <br>
+        {{ vocab_item.en_transl }}
+        <br>
+        <br>
+        Edit or delete
+
+  </div>  
+
+   
+{% endblock %}

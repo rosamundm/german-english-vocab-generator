@@ -5,16 +5,14 @@ from flask_login import LoginManager
 
 
 def create_app():
-    app = Flask(
-        __name__,
-        instance_relative_config=False
-    )
+    app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("config.Config")
     with app.app_context():
         from .main import routes
+
         app.register_blueprint(routes.main_blueprint)
         app.register_blueprint(routes.auth_blueprint)
-  
+
         login_manager = LoginManager()
         login_manager.login_view = "auth_blueprint.login"
         login_manager.init_app(app)

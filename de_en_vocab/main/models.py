@@ -1,7 +1,7 @@
 from flask import current_app as app
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import fields
-from marshmallow_sqlalchemy import ModelSchema, SQLAlchemySchema
+from marshmallow_sqlalchemy import SQLAlchemySchema
 from flask_login import UserMixin
 
 
@@ -21,20 +21,6 @@ class VocabItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     de_word = db.Column(db.String(200), index=True, unique=True)
     en_transl = db.Column(db.String(200), index=True, unique=True)
-
-    def create(self):
-        db.session.add(self)
-        db.session.commit()
-        return self
-
-    def read(self):
-        pass
-
-    def update(self):
-        pass
-
-    def delete(self):
-        pass
 
     def __repr__(self):
         return str(id)

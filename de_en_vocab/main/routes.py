@@ -10,11 +10,18 @@ from flask import (
     jsonify,
     make_response,
 )
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import current_app as app
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash
 from flask_login import login_user, logout_user, login_required
 
+from de_en_vocab.main.forms import VocabAddForm
 from de_en_vocab.main.models import User, VocabItem, VocabSchema
 
+
+db = SQLAlchemy(app)
+
+VOCAB_ITEMS = VocabItem.query.all()
 
 main_blueprint = Blueprint(
     "main_blueprint",
@@ -22,7 +29,6 @@ main_blueprint = Blueprint(
     template_folder="templates",
     static_folder="static"
 )
-
 auth_blueprint = Blueprint(
     "auth_blueprint",
     __name__,
@@ -32,12 +38,14 @@ auth_blueprint = Blueprint(
 
 
 @main_blueprint.route("/", methods=["GET"])
-def get_random_pair():  # TODO: rename
-    vocab = VocabItem.query.all()
-    random_record = random.choice(vocab)
+def index():
+    """
+    Create context to show random vocab pair on index page.
+    """
+    random_record = random.choice(VOCAB_ITEMS)
     random_german_word = random_record.de_word
     english_translation = random_record.en_transl
-    number_of_records = len(vocab)
+    number_of_records = len(VOCAB_ITEMS)
 
     return render_template(
         "index.html",
@@ -47,10 +55,60 @@ def get_random_pair():  # TODO: rename
     )
 
 
-@main_blueprint.route("/admin")
+@main_blueprint.route("/admin", methods=["GET", "POST"])
 @login_required
 def admin():
-    return render_template("admin.html")
+    """
+    Default admin view for adding new vocab pair.
+    """
+
+    vocab_add_form = VocabAddForm()
+
+    if vocab_add_form.validate_on_submit:
+        vocab_item = VocabItem(
+            de_word=vocab_add_form.de_word.data,
+            en_transl=vocab_add_form.en_transl.data
+        )
+        db.session.add(vocab_item)
+        db.session.commit()
+        flash(vocab_add_form.de_word.data, "successfully added")
+
+    return render_template(
+        "admin/create.html",
+        form=vocab_add_form,
+        vocab_item=vocab_item
+    )
+
+
+@main_blueprint.route("/admin/list/", methods=["GET", "POST"])
+@login_required
+def admin_list():
+    return render_template("admin/list.html", VOCAB_ITEMS=VOCAB_ITEMS)
+
+
+@main_blueprint.route("/admin/list/<int:id>/", methods=["GET", "POST"])
+@login_required
+def admin_detail(id):
+    vocab_item = [vocab_item for vocab_item in VOCAB_ITEMS if vocab_item.id == id][0]
+    return render_template("admin/detail.html", vocab_item=vocab_item)
+
+
+@main_blueprint.route("/admin/list/<int:id>/edit/", methods=["GET", "POST"])
+@login_required
+def admin_detail_edit(id):
+    vocab_item = [
+        vocab_item for vocab_item in VOCAB_ITEMS if vocab_item.id == id
+    ][0]
+    return render_template("admin/edit_detail.html", vocab_item=vocab_item)
+
+
+@main_blueprint.route("/admin/list/<int:id>/delete/", methods=["GET", "POST"])
+@login_required
+def admin_detail_delete(id):
+    vocab_item = [
+        vocab_item for vocab_item in VOCAB_ITEMS if vocab_item.id == id
+    ][0]
+    return render_template("admin/delete_detail.html", vocab_item=vocab_item)
 
 
 @auth_blueprint.route("/login")

@@ -18,12 +18,18 @@
 
    <div class="main-content">
 
-        {{ vocab_item.id }}. 
-        <strong>{{ vocab_item.de_word }}:</strong> 
+    <strong>   
+     <a href="{{url_for('main_blueprint.admin_detail', id=vocab_item.id)}}">
+        {{ vocab_item.de_word }}
+     </a>
+    </strong>
+    
+     <br>
         {{ vocab_item.en_transl }}
-        <br>
-        <br>
-  </div>  
+     <br>
+     <br>
+
+   </div>  
 
       {% endfor %}
 
