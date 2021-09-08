@@ -16,10 +16,8 @@ from werkzeug.security import check_password_hash
 from flask_login import login_user, logout_user, login_required
 
 from de_en_vocab.main.forms import VocabAddForm
-from de_en_vocab.main.models import User, VocabItem, VocabSchema
+from de_en_vocab.main.models import db, User, VocabItem, VocabSchema
 
-
-db = SQLAlchemy(app)
 
 VOCAB_ITEMS = VocabItem.query.all()
 
@@ -69,13 +67,14 @@ def admin():
             de_word=vocab_add_form.de_word.data,
             en_transl=vocab_add_form.en_transl.data
         )
+
         db.session.add(vocab_item)
         db.session.commit()
-        flash(vocab_add_form.de_word.data, "successfully added")
+        flash("Item saved")
 
     return render_template(
         "admin/create.html",
-        form=vocab_add_form,
+        vocab_add_form=vocab_add_form,
         vocab_item=vocab_item
     )
 
@@ -105,9 +104,15 @@ def admin_detail_edit(id):
 @main_blueprint.route("/admin/list/<int:id>/delete/", methods=["GET", "POST"])
 @login_required
 def admin_detail_delete(id):
-    vocab_item = [
-        vocab_item for vocab_item in VOCAB_ITEMS if vocab_item.id == id
-    ][0]
+    vocab_item = VocabItem.query.get_or_404(id)
+    db.session.delete(vocab_item)
+    db.session.commit()
+    flash("Item deleted")
+
+    # vocab_item = [
+    #    vocab_item for vocab_item in VOCAB_ITEMS if vocab_item.id == id
+    # ][0]
+
     return render_template("admin/delete_detail.html", vocab_item=vocab_item)
 
 

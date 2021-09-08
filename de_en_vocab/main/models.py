@@ -40,6 +40,7 @@ def init_db():
     """
     Migrate any new models that may have been created.
     """
+
     db.create_all()
     db.session.commit()
 
