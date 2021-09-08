@@ -70,7 +70,10 @@ def admin():
 
         db.session.add(vocab_item)
         db.session.commit()
-        flash("Item saved")
+        flash("Item created")
+
+        if db.session.commit():
+            return redirect(url_for("main_blueprint.admin_list"))
 
     return render_template(
         "admin/create.html",
@@ -95,9 +98,7 @@ def admin_detail(id):
 @main_blueprint.route("/admin/list/<int:id>/edit/", methods=["GET", "POST"])
 @login_required
 def admin_detail_edit(id):
-    vocab_item = [
-        vocab_item for vocab_item in VOCAB_ITEMS if vocab_item.id == id
-    ][0]
+    vocab_item = VocabItem.query.get_or_404(id)
     return render_template("admin/edit_detail.html", vocab_item=vocab_item)
 
 
@@ -107,13 +108,7 @@ def admin_detail_delete(id):
     vocab_item = VocabItem.query.get_or_404(id)
     db.session.delete(vocab_item)
     db.session.commit()
-    flash("Item deleted")
-
-    # vocab_item = [
-    #    vocab_item for vocab_item in VOCAB_ITEMS if vocab_item.id == id
-    # ][0]
-
-    return render_template("admin/delete_detail.html", vocab_item=vocab_item)
+    return redirect(url_for("main_blueprint.admin_list"))
 
 
 @auth_blueprint.route("/login")

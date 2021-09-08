@@ -14,5 +14,22 @@
 
 <h1>Add your vocab here</h1>
 
+<form method="POST" action="{{url_for('main_blueprint.admin')}}">
+    {{ vocab_add_form.csrf_token }}
+    {{ vocab_add_form.de_word }} {{ vocab_add_form.en_transl }}
+    <input type="submit" value="Save">
+</form>
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+    {% if message == "Item created" %}
+      {{ message }}
+    {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 
 {% endblock %}
