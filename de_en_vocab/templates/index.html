@@ -1,0 +1,28 @@
+<html>
+ <head>
+   <!-- global stylesheet: -->
+   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/index.css') }}">
+   <!-- jQuery CDN: -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <title>Learn German... the random way!</title>
+ </head>
+
+<body>
+  <div class="container">
+    <div class="vocab-box">
+      <p>🇩🇪 {{ random_german_word }}</p>
+      <p>🇬🇧 {{ english_translation }}</p>
+    <center>
+      <button class="custom-btn btn-9" id="new-word" onClick="window.location.reload();">new word</button>
+    </center>
+  </div>
+  </div>
+
+ <div class="footer">
+   {{ number_of_records }} words and counting!
+   <br>
+   © <a href="https://github.com/rosamundm">Rosamund Mather</a> <script type="text/javascript">document.write(new Date().getFullYear());</script> <!--| <a href="/api/v1/index">API</a> -->
+ </div>
+
+</body>
+</html>
