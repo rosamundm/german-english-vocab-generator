@@ -1,4 +1,4 @@
-import pprint
+import datetime
 import sqlite3
 
 
@@ -10,6 +10,7 @@ cursor.execute(sqlite_select_Query)
 records = cursor.fetchall()
 
 with open("db_output.txt", "w") as f:
+    f.write("%s\n\n" % str(datetime.datetime.now()))
     for r in records:
         f.write("%s\n" % str(r))
 
